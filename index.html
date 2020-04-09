@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Online Web Compiler</title>
+	<script type="text/javascript" src="jquery-3.4.1.min.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="skyCompiler.css">
+	<!-- <script type="text/javascript" src="skyCompiler.js"></script>
+ -->
+</head>
+<body>
+
+	<div id="header">
+		
+		<div id="logo">
+			skyCoder
+		</div>
+
+
+		<div id="buttonContainer">
+
+			<div class="toggleButton active" id="html">
+				HTML	
+			</div>
+
+			<div class="toggleButton" id="css">
+				CSS	
+			</div>
+
+			<div class="toggleButton" id="javascript">
+				Javascript	
+			</div>
+
+			<div class="toggleButton active" id="output">
+				Output	
+			</div>
+	</div>
+	</div>
+
+	<div id="bodyContainer">
+		<textarea id="htmlPanel" class="panel"><p id="para">Hello World</p></textarea>
+
+		<textarea id="cssPanel" class="panel hidden">p{color:red}</textarea>
+		
+		<textarea id="javascriptPanel" class="panel hidden">document.getElementById('para').innerHTML="Skynext Techworks";</textarea>
+		
+		<iframe id='outputPanel' class="panel"></iframe>
+	</div>
+
+
+	<script type="text/javascript">
+
+		//Main Logic
+		function updateOutput(){
+			//To change html and css contents
+			$("iframe").contents().find("html").html("<html><head><style type='text/css'>"+ $('#cssPanel').val() + "</style></head><body>"+
+			$("#htmlPanel").val()+"</body></html>");
+
+			//To change javascript contents
+			document.getElementById('outputPanel').contentWindow.eval($('#javascriptPanel').val());
+		}
+
+		//For hovering on and off buttons
+		$('.toggleButton').hover(function(){
+
+			$(this).addClass('highlightedButton');
+		},function(){
+
+			$(this).removeClass('highlightedButton');
+		});
+		
+		//For showing and hiding panels after button click
+		$('.toggleButton').click(function(){
+		
+			$(this).toggleClass('active');
+			$(this).removeClass('highlightedButton');
+			var panelid = $(this).attr("id") + "Panel";
+			$("#"+panelid).toggleClass("hidden");
+			var numberOfActivePanels=4- $(".hidden").length;
+			$('.panel').width(($(window).width() /numberOfActivePanels)-15 );
+
+		});
+
+
+		//Setting height and width of panels
+		$('.panel').height($(window).height() - $('#header').height()-15 );  //15 is for padding
+
+		$('.panel').width(($(window).width() /2)-15 );	//15 is for padding
+
+		
+		updateOutput();
+
+		//Binding updateOutput() function to the Textarea using on() function
+
+		$("textarea").on('change keyup paste',function(){
+			
+			updateOutput();
+		});
+
+	</script>
+
+</body>
+</html>
